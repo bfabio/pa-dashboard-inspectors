@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import sys
 import time
 
@@ -9,19 +10,17 @@ from requests.exceptions import RequestException
 from urllib.parse import urljoin
 
 def main():
+    with open('../../HOSTS_URL') as f:
+        hosts_url = f.read().strip()
+
     try:
-        # res = requests.get(host_url, params={'s': thing})
-        pass
+        res = requests.get(hosts_url)
     except RequestException as e:
         print(e, file=sys.stderr)
         return
 
-    hosts = [
-        'https://developers.italia.it',
-        'https://docs.italia.it',
-        'https://designers.italia.it',
-        'https://innovazione.gov.it'
-    ]
+    hosts = res.json()
+
     for host in hosts:
         url_404 = urljoin(host, '01189998819991197253')
         try:
